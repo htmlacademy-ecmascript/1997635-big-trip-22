@@ -9,16 +9,21 @@ export default class TripPresenter {
   waypointListComponent = new WaypointListView();
   tripComponent = new TripView();
 
-  constructor ({tripContainer}) {
+  constructor ({tripContainer, pointsModel}) {
     this.tripContainer = tripContainer;
+    this.pointsModel = pointsModel;
   }
 
   init() {
+    const points = [...this.pointsModel.getPoints()];
+    const offers = [...this.pointsModel.getOffers()];
+    const destinations = [...this.pointsModel.getDestinations()];
+
     render(new SortView(), this.tripContainer);
     render(this.waypointListComponent, this.tripContainer);
-    for (let i = 0; i < 3; i++) {
-      render(new WaypointView(), this.waypointListComponent.getElement());
+    for (let i = 0; i < points.length; i++) {
+      render(new WaypointView({point: points[i], destinations, offers}), this.waypointListComponent.getElement());
     }
-    render(new EditingFormView(), this.waypointListComponent.getElement(), RenderPosition.BEFOREBEGIN);
+    render(new EditingFormView({point: points[0], destinations, offers}), this.waypointListComponent.getElement(), RenderPosition.BEFOREBEGIN);
   }
 }
