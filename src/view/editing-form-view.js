@@ -30,7 +30,7 @@ function createOffersListTemplate(offersForType, pointOffers, pointId) {
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-        ${offersForType.map((offerType) => createOfferTemplate(offerType, pointOffers, pointId))}
+        ${offersForType.map((offerType) => createOfferTemplate(offerType, pointOffers, pointId)).join('')}
       </div>
     </section>`
   );
@@ -40,7 +40,7 @@ function createPicturesTemplate(pictures) {
   return (
     `<div class="event__photos-container">
       <div class="event__photos-tape">
-        ${pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)}
+        ${pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('')}
       </div>
     </div>`
   );
