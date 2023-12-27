@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view.js';
 import { POINT_TYPES } from '../const';
 import { getStrStartWithCapitalLetters, getDataTime } from '../utils.js';
 
@@ -129,27 +129,29 @@ function createEditingFormTemplate(point, destinations, offers) {
   );
 }
 
-export default class EditingFormView {
-  constructor({point, destinations, offers}) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class EditingFormView extends AbstractView {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+  #handleFormClick = null;
+
+  constructor({point, destinations, offers, onFormClick}) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleFormClick = onFormClick;
+
+    this.element.querySelector('.event--edit').addEventListener('click', this.#formClickHandler);
   }
 
-  getTemplate() {
-    return createEditingFormTemplate(this.point, this.destinations, this.offers);
+  get template() {
+    return createEditingFormTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormClick();
+  };
 }
 
