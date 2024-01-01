@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { POINT_TYPES } from '../const';
-import { getStrStartWithCapitalLetters, getDataTime } from '../utils.js';
+import { POINT_TYPES } from '../const.js';
+import { getStrStartWithCapitalLetters } from '../utils/common.js';
+import { getDataTime } from '../utils/waypoint.js';
 
 function createEventTypeTemplate(type, pointTipe) {
   return (

@@ -1,5 +1,6 @@
-import AbstractView from '../framework/view/abstract-view';
-import { getStrStartWithCapitalLetters, getHours, getMonth, getDifferenceInTime } from '../utils';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getStrStartWithCapitalLetters } from '../utils/common.js';
+import { getHours, getMonth, getDifferenceInTime } from '../utils/waypoint.js';
 
 function createOfferTemplate({title, price}) {
   return (
