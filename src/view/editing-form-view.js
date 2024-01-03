@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { POINT_TYPES } from '../const';
-import { getStrStartWithCapitalLetters, getDataTime } from '../utils.js';
+import { POINT_TYPES } from '../const.js';
+import { getStrStartWithCapitalLetters } from '../utils/common.js';
+import { getDataTime } from '../utils/waypoint.js';
 
 function createEventTypeTemplate(type, pointTipe) {
   return (
@@ -142,7 +143,7 @@ export default class EditingFormView extends AbstractView {
     this.#offers = offers;
     this.#handleFormClick = onFormClick;
 
-    this.element.querySelector('.event--edit').addEventListener('click', this.#formClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formClickHandler);
   }
 
   get template() {

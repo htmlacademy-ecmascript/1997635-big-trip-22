@@ -1,4 +1,4 @@
-import { getRandomPositiveInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, getRandomDate } from '../utils.js';
+import { getRandomPositiveInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, getRandomDate } from '../utils/common.js';
 import { POINT_TYPES, POINT_NAMES, POINT_DESCRIPTIONS, POINT_PICTURES, OFFER_TITLES } from '../const.js';
 
 const generateDestinationId = createRandomIdFromRangeGenerator(1, 10);

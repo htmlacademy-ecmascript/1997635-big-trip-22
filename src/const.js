@@ -75,4 +75,11 @@ const Milliseconds = {
   MILLISECONDS_IN_MINUTES: 60000
 };
 
-export { POINT_TYPES, POINT_NAMES, POINT_DESCRIPTIONS, POINT_PICTURES, OFFER_TITLES, Milliseconds };
+const FilterType = {
+  EVERYTHING: 'Everything',
+  FUTURE: 'Future',
+  PRESENT: 'Present',
+  PAST: 'Past'
+};
+
+export { POINT_TYPES, POINT_NAMES, POINT_DESCRIPTIONS, POINT_PICTURES, OFFER_TITLES, Milliseconds, FilterType };
