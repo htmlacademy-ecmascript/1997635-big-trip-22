@@ -1,5 +1,6 @@
 import { getRandomPositiveInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, getRandomDate } from '../utils/common.js';
 import { POINT_TYPES, POINT_NAMES, POINT_DESCRIPTIONS, POINT_PICTURES, OFFER_TITLES } from '../const.js';
+import { nanoid } from 'nanoid';
 
 const generateDestinationId = createRandomIdFromRangeGenerator(1, 10);
 
@@ -59,6 +60,9 @@ const createPoint = () => {
 
 const mockPoints = Array.from({length: 25}, createPoint);
 
-const getRandomPoint = () => getRandomArrayElement(mockPoints);
+const getRandomPoint = () => ({
+  id: nanoid(),
+  ...getRandomArrayElement(mockPoints)
+});
 
 export { getRandomPoint, mockDestinations, mockOffers };

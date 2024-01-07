@@ -82,4 +82,19 @@ const FilterType = {
   PAST: 'Past'
 };
 
-export { POINT_TYPES, POINT_NAMES, POINT_DESCRIPTIONS, POINT_PICTURES, OFFER_TITLES, Milliseconds, FilterType };
+const SortTipe = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price'
+};
+
+export {
+  POINT_TYPES,
+  POINT_NAMES,
+  POINT_DESCRIPTIONS,
+  POINT_PICTURES,
+  OFFER_TITLES,
+  Milliseconds,
+  FilterType,
+  SortTipe
+};
