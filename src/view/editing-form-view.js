@@ -134,25 +134,33 @@ export default class EditingFormView extends AbstractView {
   #point = null;
   #destinations = null;
   #offers = null;
-  #handleFormClick = null;
+  #handleFormSubmit = null;
+  #handleResetClick = null;
 
-  constructor({point, destinations, offers, onFormClick}) {
+  constructor({point, destinations, offers, onFormSubmit, onResetClick}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
-    this.#handleFormClick = onFormClick;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleResetClick = onResetClick;
 
-    this.element.querySelector('.event--edit').addEventListener('click', this.#formClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetBtnClickHandler);
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createEditingFormTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  #formClickHandler = (evt) => {
+  #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormClick();
+    this.#handleFormSubmit(this.#point);
+  };
+
+  #resetBtnClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleResetClick();
   };
 }
 

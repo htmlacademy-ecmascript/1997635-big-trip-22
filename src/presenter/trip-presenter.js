@@ -1,10 +1,10 @@
-import WaypointView from '../view/waypoint-view.js';
 import WaypointListView from '../view/waypoint-list-view.js';
 import SortView from '../view/sort-view.js';
 import TripView from '../view/trip-view.js';
-import EditingFormView from '../view/editing-form-view.js';
 import NoWaypointView from '../view/no-waypoint-view.js';
-import { render, replace } from '../framework/render.js';
+import { render, RenderPosition } from '../framework/render.js';
+import WaypointPresenter from './waypoint-presenter.js';
+import { updateItem } from '../utils/common.js';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -12,9 +12,12 @@ export default class TripPresenter {
   #points = [];
   #destinations = [];
   #offers = [];
+  #sortComponent = new SortView();
+  #noWaypointComponent = new NoWaypointView();
 
   #waypointListComponent = new WaypointListView();
   #tripComponent = new TripView();
+  #waypointPresenters = new Map();
 
   constructor ({tripContainer, pointsModel}) {
     this.#tripContainer = tripContainer;
@@ -30,58 +33,53 @@ export default class TripPresenter {
   }
 
   #renderWaypoint(point, destinations, offers) {
-    const escKeyDownHandler = (evt) => {
-      if(evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditingFormToWaypoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const waypointComponent = new WaypointView({
-      point,
-      destinations,
-      offers,
-      onEditClick: () => {
-        replaceWaypointToEditingForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const waypointPresenter = new WaypointPresenter({
+      waypointListContainer: this.#waypointListComponent,
+      onDataChange: this.#handleWaypointChange,
+      onModeChange: this.#handleModeChange
     });
-
-    const editingFormComponent = new EditingFormView({
-      point,
-      destinations,
-      offers,
-      onFormClick: () => {
-        replaceEditingFormToWaypoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replaceWaypointToEditingForm() {
-      replace(editingFormComponent, waypointComponent);
-    }
-
-    function replaceEditingFormToWaypoint() {
-      replace(waypointComponent, editingFormComponent);
-    }
-
-    render(waypointComponent, this.#waypointListComponent.element);
-
+    waypointPresenter.init(point, destinations, offers);
+    this.#waypointPresenters.set(point.id, waypointPresenter);
   }
 
+  #handleModeChange = () => {
+    this.#waypointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleWaypointChange = (updatedWaypoint) => {
+    this.#points = updateItem(this.#points, updatedWaypoint);
+    this.#waypointPresenters.get(updatedWaypoint.id).init(updatedWaypoint, this.#destinations, this.#offers);
+  };
+
   #renderTrip() {
-    render(new SortView(), this.#tripContainer);
     render(this.#waypointListComponent, this.#tripContainer);
 
     if(!this.#points.length) {
-      render(new NoWaypointView(), this.#waypointListComponent.element);
+      this.#renderNoWaypoint();
       return;
     }
 
+    this.#renderSort();
+    this.#renderWaypointList();
+  }
+
+  #clearWaypointList() {
+    this.#waypointPresenters.forEach((presenter) => presenter.destroy());
+    this.#waypointPresenters.clear();
+  }
+
+  #renderWaypointList() {
     for (let i = 0; i < this.#points.length; i++) {
       this.#renderWaypoint(this.#points[i], this.#destinations, this.#offers);
     }
+  }
+
+  #renderSort() {
+    render(this.#sortComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderNoWaypoint() {
+    render(this.#noWaypointComponent, this.#waypointListComponent.element, RenderPosition.AFTERBEGIN);
   }
 }
 
