@@ -1,6 +1,7 @@
 import { getRandomPositiveInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, getRandomDate } from '../utils/common.js';
 import { POINT_TYPES, POINT_NAMES, POINT_DESCRIPTIONS, POINT_PICTURES, OFFER_TITLES } from '../const.js';
 import { nanoid } from 'nanoid';
+import { getRandomDateTo } from '../utils/waypoint.js';
 
 const generateDestinationId = createRandomIdFromRangeGenerator(1, 10);
 
@@ -46,11 +47,12 @@ const getOfferListForPoint = (currentType) => {
 
 const createPoint = () => {
   const currentType = getRandomArrayElement(POINT_TYPES);
+  const randomDateFrom = getRandomDate(new Date(), new Date(2025, 0, 1));
   return ({
     id: generatePointId(),
     basePrice: getRandomPositiveInteger(500, 10000),
-    dateFrom: getRandomDate(new Date(), new Date(2025, 0, 1)),
-    dateTo:  getRandomDate(new Date(2025, 0, 1), new Date(2026, 0, 1)),
+    dateFrom: randomDateFrom,
+    dateTo: getRandomDateTo(randomDateFrom),
     destination: getRandomArrayElement(mockDestinations).id,
     isFavorite: Boolean(getRandomPositiveInteger(0, 1)),
     type: currentType,
