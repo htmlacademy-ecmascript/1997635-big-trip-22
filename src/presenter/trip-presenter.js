@@ -90,7 +90,7 @@ export default class TripPresenter {
       this.#renderNoWaypoint();
       return;
     }
-
+    this.#sortWaypoints(this.#currentSortType);
     this.#renderWaypointList();
   }
 
