@@ -82,10 +82,12 @@ const FilterType = {
   PAST: 'Past'
 };
 
-const SortTipe = {
+const SortType = {
   DAY: 'day',
+  EVENT: 'event',
   TIME: 'time',
-  PRICE: 'price'
+  PRICE: 'price',
+  OFFERS: 'offers'
 };
 
 export {
@@ -96,5 +98,5 @@ export {
   OFFER_TITLES,
   Milliseconds,
   FilterType,
-  SortTipe
+  SortType
 };
