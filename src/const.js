@@ -90,6 +90,16 @@ const SortType = {
   OFFERS: 'offers'
 };
 
+const FormType = {
+  EDITING: 'editing',
+  CREATION: 'creation'
+};
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export {
   POINT_TYPES,
   POINT_NAMES,
@@ -98,5 +108,7 @@ export {
   OFFER_TITLES,
   Milliseconds,
   FilterType,
-  SortType
+  SortType,
+  Mode,
+  FormType
 };

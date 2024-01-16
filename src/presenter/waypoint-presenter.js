@@ -1,12 +1,7 @@
 import WaypointView from '../view/waypoint-view.js';
 import EditingFormView from '../view/editing-form-view.js';
 import { render, replace, remove } from '../framework/render.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
-
+import { Mode } from '../const.js';
 export default class WaypointPresenter {
   #waypointListContainer = null;
   #handleDataChange = null;
@@ -47,7 +42,8 @@ export default class WaypointPresenter {
       destinations: this.#destinations,
       offers: this.#offers,
       onResetClick: this.#handleFormClose,
-      onFormSubmit: this.#handleFormSubmit
+      onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if(prevWaypointComponent === null || prevEditingFormComponent === null) {
@@ -74,6 +70,7 @@ export default class WaypointPresenter {
 
   resetView() {
     if(this.#mode !== Mode.DEFAULT) {
+      this.#editingFormComponent.reset(this.#point);
       this.#replaceEditingFormToWaypoint();
     }
   }
@@ -81,6 +78,7 @@ export default class WaypointPresenter {
   #escKeyDownHandler = (evt) => {
     if(evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editingFormComponent.reset(this.#point);
       this.#replaceEditingFormToWaypoint();
     }
   };
@@ -107,11 +105,16 @@ export default class WaypointPresenter {
   };
 
   #handleFormClose = () => {
+    this.#editingFormComponent.reset(this.#point);
     this.#replaceEditingFormToWaypoint();
   };
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(point, this.#destinations, this.#offers);
     this.#replaceEditingFormToWaypoint();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(point, this.#destinations, this.#offers);
   };
 }

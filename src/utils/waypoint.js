@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Milliseconds } from '../const.js';
 
-const getRandomDateTo = (dateFrom) => dayjs(dateFrom).add((Math.random() * 10), 'hour').add((Math.random() * 10), 'minute');
+const getRandomDateTo = (dateFrom) => new Date(dayjs(dateFrom).add((Math.random() * 10), 'hour').add((Math.random() * 10), 'minute'));
 
 const getHours = (data) => dayjs(data).format('HH:mm');
 
