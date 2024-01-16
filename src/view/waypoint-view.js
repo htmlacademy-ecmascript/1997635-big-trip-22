@@ -37,9 +37,9 @@ function createWaypointTemplate(point, destinations, offers) {
         <h3 class="event__title">${createEventTitle}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${getHours(dateFrom)}</time>
+            <time class="event__start-time" datetime="${dateFrom}">${getHours(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${getHours(dateTo)}</time>
+            <time class="event__end-time" datetime="${dateTo}">${getHours(dateTo)}</time>
           </p>
           <p class="event__duration">${getDifferenceInTime(dateFrom, dateTo)}</p>
         </div>
