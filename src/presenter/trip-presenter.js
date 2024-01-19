@@ -15,6 +15,7 @@ export default class TripPresenter {
   #destinations = [];
   #offers = [];
   #sortComponent = null;
+  #isCreating = false;
   #noWaypointComponent = new NoWaypointView();
   #waypointListComponent = new WaypointListView();
   #tripComponent = new TripView();

@@ -1,7 +1,7 @@
 import WaypointView from '../view/waypoint-view.js';
 import EditingFormView from '../view/editing-form-view.js';
 import { render, replace, remove } from '../framework/render.js';
-import { Mode } from '../const.js';
+import { FormType, Mode } from '../const.js';
 export default class WaypointPresenter {
   #waypointListContainer = null;
   #handleDataChange = null;
@@ -41,6 +41,7 @@ export default class WaypointPresenter {
       point: this.#point,
       destinations: this.#destinations,
       offers: this.#offers,
+      formType: FormType.EDITING,
       onResetClick: this.#handleFormClose,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick

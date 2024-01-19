@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { POINT_TYPES } from '../const.js';
+import { FormType, POINT_TYPES } from '../const.js';
 import { getStrStartWithCapitalLetters } from '../utils/common.js';
 import { getDataTime } from '../utils/waypoint.js';
 import flatpickr from 'flatpickr';
@@ -69,13 +69,30 @@ function createDestinationTemplate({description, pictures}) {
   );
 }
 
-function createEditingFormTemplate(point, destinations, offers) {
+function createButtonTemplate(isCreating) {
+  if (isCreating) {
+    return `
+      <button class="event__reset-btn" type="reset">Cancel</button>
+    `;
+  }
+
+  return `
+    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>
+  `;
+}
+
+function createEditingFormTemplate(point, destinations, offers, formType) {
   const pointId = point.id;
   const { type: pointType, basePrice, dateFrom, dateTo, destination, offers: pointOffers } = point;
 
   const currentDestination = destinations.find((el) => el.id === destination);
 
   const offersForType = offers.find((offer) => offer.type === pointType).offers;
+
+  const isCreating = formType === FormType.CREATION;
 
   return (
     `<li class="trip-events__item">
@@ -130,10 +147,7 @@ function createEditingFormTemplate(point, destinations, offers) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
+          ${createButtonTemplate(isCreating)}
         </header>
         <section class="event__details">
 
@@ -154,8 +168,9 @@ export default class EditingFormView extends AbstractStatefulView {
   #handleDeleteClick = null;
   #datepickerTo = null;
   #datepickerFrom = null;
+  #currentformType = FormType.EDITING;
 
-  constructor({point, destinations, offers, onFormSubmit, onResetClick, onDeleteClick}) {
+  constructor({point, destinations, offers, onFormSubmit, onResetClick, onDeleteClick, formType}) {
     super();
     this._setState(EditingFormView.parseWaypointToState(point));
     this.#destinations = destinations;
@@ -164,10 +179,11 @@ export default class EditingFormView extends AbstractStatefulView {
     this.#handleResetClick = onResetClick;
     this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
+    this.#currentformType = formType;
   }
 
   get template() {
-    return createEditingFormTemplate(this._state, this.#destinations, this.#offers);
+    return createEditingFormTemplate(this._state, this.#destinations, this.#offers, this.#currentformType);
   }
 
   _restoreHandlers() {
