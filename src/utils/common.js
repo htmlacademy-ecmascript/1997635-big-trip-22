@@ -28,6 +28,4 @@ const getRandomDate = (start, end) => new Date(start.getTime()
 
 const getStrStartWithCapitalLetters = (str) => str.replace(str[0], str[0].toUpperCase());
 
-const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
-
-export {getRandomPositiveInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, getRandomDate, getStrStartWithCapitalLetters, updateItem};
+export {getRandomPositiveInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, getRandomDate, getStrStartWithCapitalLetters };
