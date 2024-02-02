@@ -61,7 +61,7 @@ const sortWaypointsByPrice = (b, a) => {
 function isBigDifference(pointA, pointB) {
   return pointA.dateFrom !== pointB.dateFrom
   || pointA.basePrice !== pointB.basePrice
-  || dayjs(pointA.dateFrom).diff(dayjs(pointA.dateTo)) !== dayjs(pointB.dateFrom).diff(dayjs(pointB.dateTo));
+  || getDifferenceInTime(pointA.dateFrom, pointA.dateTo) !== getDifferenceInTime(pointB.dateFrom, pointB.dateTo);
 }
 
 export {getRandomDateTo, getDataTime, getHours, getMonth, getDifferenceInTime, sortWaypointsByDay, sortWaypointsByTime, sortWaypointsByPrice, isBigDifference, getDay, getDayMonth};
