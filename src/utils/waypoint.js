@@ -9,6 +9,10 @@ const getMonth = (data) => dayjs(data).format('MMM YY');
 
 const getDataTime = (data) => dayjs(data).format('DD/MM/YY HH:mm');
 
+const getDay = (data) => dayjs(data).format('DD');
+
+const getDayMonth = (data) => dayjs(data).format('DD MMM');
+
 const getDifferenceInTime = (start, end) => {
   const difference = dayjs(end).diff(dayjs(start));
   if (difference <= Milliseconds.MILLISECONDS_IN_HOURS) {
@@ -54,4 +58,10 @@ const sortWaypointsByPrice = (b, a) => {
   return 0;
 };
 
-export {getRandomDateTo, getDataTime, getHours, getMonth, getDifferenceInTime, sortWaypointsByDay, sortWaypointsByTime, sortWaypointsByPrice};
+function isBigDifference(pointA, pointB) {
+  return pointA.dateFrom !== pointB.dateFrom
+  || pointA.basePrice !== pointB.basePrice
+  || getDifferenceInTime(pointA.dateFrom, pointA.dateTo) !== getDifferenceInTime(pointB.dateFrom, pointB.dateTo);
+}
+
+export {getRandomDateTo, getDataTime, getHours, getMonth, getDifferenceInTime, sortWaypointsByDay, sortWaypointsByTime, sortWaypointsByPrice, isBigDifference, getDay, getDayMonth};

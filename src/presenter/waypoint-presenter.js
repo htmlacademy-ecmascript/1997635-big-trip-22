@@ -1,7 +1,8 @@
 import WaypointView from '../view/waypoint-view.js';
 import EditingFormView from '../view/editing-form-view.js';
 import { render, replace, remove } from '../framework/render.js';
-import { FormType, Mode } from '../const.js';
+import { FormType, Mode, UserAction, UpdateType } from '../const.js';
+import { isBigDifference } from '../utils/waypoint.js';
 export default class WaypointPresenter {
   #waypointListContainer = null;
   #handleDataChange = null;
@@ -102,7 +103,8 @@ export default class WaypointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite}, this.#destinations, this.#offers);
+    this.#handleDataChange(UserAction.UPDATE_POINT,
+      UpdateType.PATCH, {...this.#point, isFavorite: !this.#point.isFavorite}, this.#destinations, this.#offers);
   };
 
   #handleFormClose = () => {
@@ -111,11 +113,18 @@ export default class WaypointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    this.#handleDataChange(point, this.#destinations, this.#offers);
+    const isMinorUpdate = isBigDifference(point, this.#point);
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      point,
+      this.#destinations,
+      this.#offers);
     this.#replaceEditingFormToWaypoint();
   };
 
   #handleDeleteClick = (point) => {
-    this.#handleDataChange(point, this.#destinations, this.#offers);
+    this.#handleDataChange(UserAction.DELETE_POINT,
+      UpdateType.MINOR, point, this.#destinations, this.#offers);
   };
 }

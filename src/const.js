@@ -100,6 +100,35 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+const POINT_BLANCK = {
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  isFavorite: false,
+  offers: [],
+  type: 'taxi',
+};
+
+const NoPointsTextType = {
+  everything: 'Click New Event to create your first point',
+  future: 'There are no future events now',
+  present: 'There are no present events now',
+  past: 'There are no past events now',
+};
+
 export {
   POINT_TYPES,
   POINT_NAMES,
@@ -110,5 +139,9 @@ export {
   FilterType,
   SortType,
   Mode,
-  FormType
+  FormType,
+  UserAction,
+  UpdateType,
+  POINT_BLANCK,
+  NoPointsTextType
 };
