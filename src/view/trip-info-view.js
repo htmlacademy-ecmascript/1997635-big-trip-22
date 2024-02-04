@@ -6,6 +6,20 @@ function createTripInfoTemplate(points, destinations) {
 
   const totalPrice = points.reduce((s, point) => s + point.basePrice, 0);
 
+  /*const offersForType = (offersAll, pointType) => offersAll.find((offer) => offer.type === pointType).offers;
+
+  const totalOffersPrice = points.reduce((s, point) => {
+    const offersAllForType = offersForType(offers, point.type);
+    const offersIds = point.offers;
+    const a = offersAllForType.filter((offer) => offersIds.includes(offer.id));
+    //console.log(a)
+    if (a.lenght > 0) {
+      console.log(a.reduce((acc, b) => acc + b.price))
+    }
+  });
+
+  console.log(totalOffersPrice);*/
+
   const getDestinationById = (id) => destinations.find((el) => el.id === id).name;
 
   return `<section class="trip-main__trip-info  trip-info">
@@ -24,14 +38,16 @@ function createTripInfoTemplate(points, destinations) {
 export default class TripInfoView extends AbstractView{
   #points = null;
   #destinations = null;
+  #offers = null;
 
-  constructor ({points, destinations}) {
+  constructor ({points, destinations, offers}) {
     super();
     this.#points = points;
     this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   get template() {
-    return createTripInfoTemplate(this.#points, this.#destinations);
+    return createTripInfoTemplate(this.#points, this.#destinations, this.#offers);
   }
 }

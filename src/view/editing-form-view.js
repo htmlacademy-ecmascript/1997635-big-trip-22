@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { FormType, POINT_TYPES, POINT_BLANCK } from '../const.js';
+import { FormType, POINT_BLANCK } from '../const.js';
 import { getStrStartWithCapitalLetters } from '../utils/common.js';
 import { getDataTime } from '../utils/waypoint.js';
 import he from 'he';
@@ -63,7 +63,7 @@ function createDestinationTemplate({description, pictures}) {
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">
-        ${description.join('')}
+        ${description}
       </p>
       ${pictures.length ? createPicturesTemplate(pictures) : ''}
     </section>`
@@ -91,9 +91,11 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
 
   const currentDestination = destinations.find((el) => el.id === destination);
 
-  const offersForType = offers.find((offer) => offer.type === pointType).offers;
+  const offersForType = offers?.find((offer) => offer.type === pointType).offers;
 
   const isCreating = formType === FormType.CREATION;
+
+  const offersKeys = offers?.map((offer) => offer.type);
 
   return (
     `<li class="trip-events__item">
@@ -109,7 +111,7 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${POINT_TYPES.map((type) => createEventTypeTemplate(type, pointType)).join('')}
+                ${offersKeys?.map((type) => createEventTypeTemplate(type, pointType)).join('')}
               </fieldset>
             </div>
           </div>
@@ -144,7 +146,7 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" pattern="^[ 0-9]+$" value="${basePrice ? basePrice : ''}">
+            <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" pattern="^[ 0-9]+$" min="1" max="100000" value="${basePrice ? he.encode(String(basePrice)) : ''}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -152,7 +154,7 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
         </header>
         <section class="event__details">
 
-          ${offersForType.length ? createOffersListTemplate(offersForType, pointOffers) : ''}
+          ${offersForType ? createOffersListTemplate(offersForType, pointOffers) : ''}
 
           ${currentDestination && (currentDestination.description.length || currentDestination.pictures.length) ? createDestinationTemplate(currentDestination) : ''}
         </section>
@@ -255,21 +257,21 @@ export default class EditingFormView extends AbstractStatefulView {
   #offerChangeHandler = (evt) => {
     evt.preventDefault();
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-    this.updateElement({
+    this._setState({
       offers: checkedOffers.map((offer) => +offer.dataset.offerId)
     });
   };
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
-      basePrice: evt.target.value
+    this._setState({
+      basePrice: Number(evt.target.value)
     });
   };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(EditingFormView.parseStateToWaypoint(this._state, this.#destinations, this.#offers));
+    this.#handleFormSubmit(EditingFormView.parseStateToWaypoint(this._state));
   };
 
   #resetBtnClickHandler = (evt) => {
@@ -279,7 +281,7 @@ export default class EditingFormView extends AbstractStatefulView {
 
   #formDeleteHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick(EditingFormView.parseStateToWaypoint(this._state, this.#destinations, this.#offers));
+    this.#handleDeleteClick(EditingFormView.parseStateToWaypoint(this._state));
   };
 
   static parseWaypointToState(point) {

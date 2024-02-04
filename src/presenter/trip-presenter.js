@@ -43,8 +43,7 @@ export default class TripPresenter {
 
     this.#newPointPresenter = new NewPointPresenter({
       container: this.#waypointListComponent.element,
-      destinations: this.#pointsModel.destinations,
-      offersModel: this.#pointsModel.offers,
+      pointsModel: this.#pointsModel,
       onDataChange: this.#handleViewAction,
       onDestroy: this.#newPointDestroyHandler,
     });
@@ -105,6 +104,7 @@ export default class TripPresenter {
     this.#tripInfoComponent = new TripInfoView({
       points: this.#pointsModel.points,
       destinations: this.#pointsModel.destinations,
+      offers: this.#pointsModel.offers,
     });
     render(this.#tripInfoComponent, this.#newPointButtonContainer, RenderPosition.AFTERBEGIN);
   }
@@ -173,7 +173,7 @@ export default class TripPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#waypointPresenters.get(data.id).init(data);
+        this.#waypointPresenters.get(data.id).init(data, this.#pointsModel.destinations, this.#pointsModel.offers);
         break;
       case UpdateType.MINOR:
         this.#clearTrip();

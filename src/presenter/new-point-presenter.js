@@ -4,16 +4,14 @@ import {UserAction, UpdateType, FormType} from '../const.js';
 
 export default class NewPointPresenter {
   #container = null;
-  #destinations = null;
-  #offers = null;
   #handleDataChange = null;
   #handleDestroy = null;
   #pointNewComponent = null;
+  #pointsModel = null;
 
-  constructor({container, destinations, offers, onDataChange, onDestroy}) {
+  constructor({container, pointsModel, onDataChange, onDestroy}) {
     this.#container = container;
-    this.#destinations = destinations;
-    this.#offers = offers;
+    this.#pointsModel = pointsModel;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
@@ -23,12 +21,12 @@ export default class NewPointPresenter {
       return;
     }
     this.#pointNewComponent = new EditingFormView({
-      destinations: this.#destinations,
-      offers: this.#offers,
+      destinations: this.#pointsModel.destinations,
+      offers: this.#pointsModel.offers,
+      formType: FormType.CREATION,
       onResetClick: this.#handleResetClick,
       onDeleteClick: this.#handleResetClick,
-      onPointEditSubmit: this.#handleFormSubmit,
-      modeAddForm: FormType.CREATION
+      onFormSubmit: this.#handleFormSubmit
     });
     render(this.#pointNewComponent, this.#container, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);

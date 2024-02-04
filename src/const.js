@@ -1,15 +1,3 @@
-const POINT_TYPES = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
-];
-
 const Milliseconds = {
   MILLISECONDS_IN_DAY: 60000 * 60 * 24,
   MILLISECONDS_IN_HOURS: 60000 * 60,
@@ -17,10 +5,10 @@ const Milliseconds = {
 };
 
 const FilterType = {
-  EVERYTHING: 'Everything',
-  FUTURE: 'Future',
-  PRESENT: 'Present',
-  PAST: 'Past'
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
 };
 
 const SortType = {
@@ -71,8 +59,14 @@ const NoPointsTextType = {
   past: 'There are no past events now',
 };
 
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
 export {
-  POINT_TYPES,
   Milliseconds,
   FilterType,
   SortType,
@@ -81,5 +75,6 @@ export {
   UserAction,
   UpdateType,
   POINT_BLANCK,
-  NoPointsTextType
+  NoPointsTextType,
+  Method
 };
