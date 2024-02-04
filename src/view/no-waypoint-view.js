@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { NoPointsTextType } from '../const.js';
 
 function createNoWaypointTemplate(filterType) {
-  const NoPointsTextValue = NoPointsTextType[filterType];
+  const NoPointsTextValue = NoPointsTextType[filterType.toLowerCase()];
   return (
     `<p class="trip-events__msg">${NoPointsTextValue}</p>`
   );
