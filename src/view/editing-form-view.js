@@ -94,7 +94,7 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
   const pointId = point.id;
   const { type: pointType, basePrice, dateFrom, dateTo, destination, offers: pointOffers, isDisabled, isSaving, isDeleting } = point;
 
-  const currentDestination = destinations.find((el) => el.id === destination);
+  const currentDestination = destinations?.find((el) => el.id === destination);
 
   const offersForType = offers?.find((offer) => offer.type === pointType).offers;
 
@@ -204,8 +204,8 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
 }
 
 export default class EditingFormView extends AbstractStatefulView {
-  #destinations = null;
-  #offers = null;
+  #destinations = [];
+  #offers = [];
   #handleFormSubmit = null;
   #handleResetClick = null;
   #handleDeleteClick = null;

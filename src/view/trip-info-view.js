@@ -20,7 +20,7 @@ function createTripInfoTemplate(points, destinations) {
 
   console.log(totalOffersPrice);*/
 
-  const getDestinationById = (id) => destinations.find((el) => el.id === id).name;
+  const getDestinationById = (id) => destinations?.find((el) => el.id === id).name;
 
   return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
