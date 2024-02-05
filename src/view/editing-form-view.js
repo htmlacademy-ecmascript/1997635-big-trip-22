@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { FormType, POINT_BLANCK } from '../const.js';
+import { FormType, POINT_BLANK } from '../const.js';
 import { getStrStartWithCapitalLetters } from '../utils/common.js';
 import { getDataTime } from '../utils/waypoint.js';
 import he from 'he';
@@ -96,7 +96,7 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
 
   const currentDestination = destinations?.find((el) => el.id === destination);
 
-  const offersForType = offers?.find((offer) => offer.type === pointType).offers;
+  const offersForType = offers?.find((offer) => offer.type === pointType)?.offers;
 
   const isCreating = formType === FormType.CREATION;
 
@@ -213,7 +213,7 @@ export default class EditingFormView extends AbstractStatefulView {
   #datepickerFrom = null;
   #currentformType = null;
 
-  constructor({point = POINT_BLANCK, destinations, offers, onFormSubmit, onResetClick, onDeleteClick, formType}) {
+  constructor({point = POINT_BLANK, destinations, offers, onFormSubmit, onResetClick, onDeleteClick, formType}) {
     super();
     this._setState(EditingFormView.parseWaypointToState(point));
     this._restoreHandlers();

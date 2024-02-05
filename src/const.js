@@ -42,7 +42,7 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-const POINT_BLANCK = {
+const POINT_BLANK = {
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
@@ -79,7 +79,7 @@ export {
   FormType,
   UserAction,
   UpdateType,
-  POINT_BLANCK,
+  POINT_BLANK,
   NoPointsTextType,
   Method,
   TimeLimit
