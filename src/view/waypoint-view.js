@@ -15,13 +15,13 @@ function createOfferTemplate({title, price}) {
 function createWaypointTemplate(point, destinations, offers) {
   const { type, basePrice, dateFrom, dateTo, destination, isFavorite, offers: pointOffers } = point;
 
-  const currentDestination = destinations.find((el) => el.id === destination).name;
+  const currentDestination = destinations?.find((el) => el.id === destination).name;
 
   const createEventTitle = `${getStrStartWithCapitalLetters(type)} ${getStrStartWithCapitalLetters(currentDestination)}`;
 
-  const offersForType = offers.find((offer) => offer.type === type).offers;
+  const offersForType = offers?.find((offer) => offer.type === type).offers;
 
-  const pointOffersList = pointOffers.map((pointOffer) => offersForType.find((offer) => offer.id === pointOffer));
+  const pointOffersList = pointOffers?.map((pointOffer) => offersForType.find((offer) => offer.id === pointOffer));
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'

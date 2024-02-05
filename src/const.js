@@ -42,7 +42,7 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-const POINT_BLANCK = {
+const POINT_BLANK = {
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
@@ -66,6 +66,11 @@ const Method = {
   DELETE: 'DELETE',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export {
   Milliseconds,
   FilterType,
@@ -74,7 +79,8 @@ export {
   FormType,
   UserAction,
   UpdateType,
-  POINT_BLANCK,
+  POINT_BLANK,
   NoPointsTextType,
-  Method
+  Method,
+  TimeLimit
 };

@@ -23,10 +23,10 @@ export default class NewPointPresenter {
     this.#pointNewComponent = new EditingFormView({
       destinations: this.#pointsModel.destinations,
       offers: this.#pointsModel.offers,
-      formType: FormType.CREATION,
       onResetClick: this.#handleResetClick,
       onDeleteClick: this.#handleResetClick,
-      onFormSubmit: this.#handleFormSubmit
+      onFormSubmit: this.#handleFormSubmit,
+      formType: FormType.CREATION,
     });
     render(this.#pointNewComponent, this.#container, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -43,13 +43,30 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#pointNewComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointNewComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this.#pointNewComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
       point,
     );
-    this.destroy();
   };
 
   #handleResetClick = () => {
