@@ -1,36 +1,17 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { getDayMonth, sortWaypointsByDay } from '../utils/waypoint.js';
 
-function createTripInfoTemplate(points, destinations) {
-  const filteredPoints = [...points].sort(sortWaypointsByDay);
-
-  const totalPrice = points.reduce((s, point) => s + point.basePrice, 0);
-
-  /*const offersForType = (offersAll, pointType) => offersAll.find((offer) => offer.type === pointType).offers;
-
-  const totalOffersPrice = points.reduce((s, point) => {
-    const offersAllForType = offersForType(offers, point.type);
-    const offersIds = point.offers;
-    const a = offersAllForType.filter((offer) => offersIds.includes(offer.id));
-    //console.log(a)
-    if (a.lenght > 0) {
-      console.log(a.reduce((acc, b) => acc + b.price))
-    }
-  });
-
-  console.log(totalOffersPrice);*/
-
-  const getDestinationById = (id) => destinations?.find((el) => el.id === id).name;
+function createTripInfoTemplate(getTotalPrice, getStringDestinations, getStringData) {
 
   return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
-      <h1 class="trip-info__title">${getDestinationById(filteredPoints.at(0).destination)} &mdash; ${points.lenght === 3 ? getDestinationById(filteredPoints.at(1).destination) : '...'} &mdash; ${getDestinationById(filteredPoints.at(-1).destination)}</h1>
+      <h1 class="trip-info__title">${getStringDestinations()}</h1>
 
-     <p class="trip-info__dates">${getDayMonth(filteredPoints.at(0).dateFrom)}&nbsp;&mdash;&nbsp;${getDayMonth(filteredPoints.at(-1).dateTo)}</p>
+     <p class="trip-info__dates">${getStringData()}</p>
     </div>
 
     <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${getTotalPrice()}</span>
     </p>
       </section>`;
 }
@@ -42,12 +23,65 @@ export default class TripInfoView extends AbstractView{
 
   constructor ({points, destinations, offers}) {
     super();
-    this.#points = points;
+    this.#points = [...points].sort(sortWaypointsByDay);
     this.#destinations = destinations;
     this.#offers = offers;
   }
 
   get template() {
-    return createTripInfoTemplate(this.#points, this.#destinations, this.#offers);
+    return createTripInfoTemplate(this.#getTotalPrice, this.#getStringDestinations, this.#getStringData);
   }
+
+  #getTotalPrice = () => {
+    if (this.#points.length === 0) {
+      return 0;
+    }
+
+    let totalPrice = 0;
+
+    this.#points.forEach((point) => {
+      const offersForType = this.#offers.find((offer) => offer.type === point.type);
+      const checkedOffers = offersForType.offers.filter((offer) => point.offers.find((el) => el === offer.id));
+      totalPrice += checkedOffers.reduce((s, checkedOffer) => s + Number(checkedOffer.price), 0);
+    });
+
+    totalPrice += this.#points.reduce((s, point) => s + point.basePrice, 0);
+
+    return totalPrice;
+  };
+
+  #getDestinationById = (id) => this.#destinations?.find((el) => el.id === id).name;
+
+  #getStringDestinations = () => {
+    if (this.#points.length === 0) {
+      return;
+    }
+
+    if (this.#points.length === 1) {
+      return `${this.#getDestinationById(this.#points.at(0).destination)}`;
+    }
+
+    if (this.#points.length === 2) {
+      return `${this.#getDestinationById(this.#points.at(0).destination)} &mdash; ${this.#getDestinationById(this.#points.at(1).destination)}`;
+    }
+
+    if (this.#points.length === 3) {
+      return `${this.#getDestinationById(this.#points.at(0).destination)} &mdash; ${this.#getDestinationById(this.#points.at(1).destination)} &mdash; ${this.#getDestinationById(this.#points.at(-1).destination)}`;
+    }
+
+    return `${this.#getDestinationById(this.#points.at(0).destination)} &mdash; ... &mdash; ${this.#getDestinationById(this.#points.at(-1).destination)}`;
+  };
+
+  #getStringData = () => {
+    if (this.#points.length === 0) {
+      return;
+    }
+
+    if (this.#points.length === 1) {
+      return getDayMonth(this.#points.at(0).dateFrom);
+    }
+
+    return `${getDayMonth(this.#points.at(0).dateFrom)}&nbsp;&mdash;&nbsp;${getDayMonth(this.#points.at(-1).dateTo)}`;
+  };
+
 }
