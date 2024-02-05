@@ -66,6 +66,11 @@ const Method = {
   DELETE: 'DELETE',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export {
   Milliseconds,
   FilterType,
@@ -76,5 +81,6 @@ export {
   UpdateType,
   POINT_BLANCK,
   NoPointsTextType,
-  Method
+  Method,
+  TimeLimit
 };

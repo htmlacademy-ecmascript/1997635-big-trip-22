@@ -15,7 +15,7 @@ function createEventTypeTemplate(type, pointTipe) {
   );
 }
 
-function createOfferTemplate(offerType, pointOffers) {
+function createOfferTemplate(offerType, pointOffers, isDisabled) {
   return (
     `<div class="event__offer-selector">
       <input
@@ -25,6 +25,7 @@ function createOfferTemplate(offerType, pointOffers) {
         name="event-offer-luggage"
         ${pointOffers.includes(offerType.id) ? 'checked' : ''}
         data-offer-id=${offerType.id}
+        ${isDisabled ? 'disabled' : ''}
       >
       <label class="event__offer-label" for="event-offer-luggage-${offerType.id}">
         <span class="event__offer-title">${offerType.title}</span>
@@ -35,13 +36,13 @@ function createOfferTemplate(offerType, pointOffers) {
   );
 }
 
-function createOffersListTemplate(offersForType, pointOffers) {
+function createOffersListTemplate(offersForType, pointOffers, isDisabled) {
   return (
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-        ${offersForType.map((offerType) => createOfferTemplate(offerType, pointOffers)).join('')}
+        ${offersForType.map((offerType) => createOfferTemplate(offerType, pointOffers, isDisabled)).join('')}
       </div>
     </section>`
   );
@@ -70,7 +71,7 @@ function createDestinationTemplate({description, pictures}) {
   );
 }
 
-function createButtonTemplate(isCreating) {
+function createButtonTemplate(isCreating, isDeleting, isDisabled) {
   if (isCreating) {
     return `
       <button class="event__reset-btn" type="reset">Cancel</button>
@@ -78,7 +79,11 @@ function createButtonTemplate(isCreating) {
   }
 
   return `
-    <button class="event__reset-btn" type="reset">Delete</button>
+    <button
+      class="event__reset-btn"
+      type="reset"
+      ${isDisabled ? 'disabled' : ''}
+    >${isDeleting ? 'Deleting...' : 'Delete'}</button>
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
@@ -87,7 +92,7 @@ function createButtonTemplate(isCreating) {
 
 function createEditingFormTemplate(point, destinations, offers, formType) {
   const pointId = point.id;
-  const { type: pointType, basePrice, dateFrom, dateTo, destination, offers: pointOffers } = point;
+  const { type: pointType, basePrice, dateFrom, dateTo, destination, offers: pointOffers, isDisabled, isSaving, isDeleting } = point;
 
   const currentDestination = destinations.find((el) => el.id === destination);
 
@@ -106,7 +111,12 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType}.png" alt="${pointType}">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${pointId}" type="checkbox">
+            <input class="event__type-toggle
+              visually-hidden"
+              id="event-type-toggle-${pointId}"
+              type="checkbox"
+              ${isDisabled ? 'disabled' : ''}
+            >
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -126,7 +136,9 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
               type="text"
               name="event-destination"
               value="${currentDestination ? he.encode(currentDestination.name) : ''}"
-              list="destination-list-${pointId}">
+              list="destination-list-${pointId}"
+              ${isDisabled ? 'disabled' : ''}
+            >
             <datalist
               id="destination-list-${pointId}">
               ${destinations.map(({name}) => `<option value="${name}"></option>`).join('')}
@@ -135,10 +147,24 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${pointId}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${pointId}" type="text" name="event-start-time" value="${dateFrom ? getDataTime(dateFrom) : ''}">
+            <input
+              class="event__input  event__input--time"
+              id="event-start-time-${pointId}"
+              type="text"
+              name="event-start-time"
+              value="${dateFrom ? getDataTime(dateFrom) : ''}"
+              ${isDisabled ? 'disabled' : ''}
+            >
             &mdash;
             <label class="visually-hidden" for="event-end-time-${pointId}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${dateTo ? getDataTime(dateTo) : ''}">
+            <input
+              class="event__input  event__input--time"
+              id="event-end-time-${pointId}"
+              type="text"
+              name="event-end-time"
+              value="${dateTo ? getDataTime(dateTo) : ''}"
+              ${isDisabled ? 'disabled' : ''}
+            >
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -146,15 +172,29 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" pattern="^[ 0-9]+$" min="1" max="100000" value="${basePrice ? he.encode(String(basePrice)) : ''}">
+            <input
+              class="event__input  event__input--price"
+              id="event-price-${pointId}"
+              type="text"
+              name="event-price"
+              pattern="^[ 0-9]+$"
+              min="1"
+              max="100000"
+              value="${basePrice ? he.encode(String(basePrice)) : ''}"
+              ${isDisabled ? 'disabled' : ''}
+            >
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          ${createButtonTemplate(isCreating)}
+          <button
+            class="event__save-btn  btn  btn--blue"
+            type="submit"
+            ${isDisabled ? 'disabled' : ''}
+          >${isSaving ? 'Saving...' : 'Save'}</button>
+          ${createButtonTemplate(isCreating, isDeleting, isDisabled)}
         </header>
         <section class="event__details">
 
-          ${offersForType ? createOffersListTemplate(offersForType, pointOffers) : ''}
+          ${offersForType ? createOffersListTemplate(offersForType, pointOffers, isDisabled) : ''}
 
           ${currentDestination && (currentDestination.description.length || currentDestination.pictures.length) ? createDestinationTemplate(currentDestination) : ''}
         </section>
@@ -171,17 +211,17 @@ export default class EditingFormView extends AbstractStatefulView {
   #handleDeleteClick = null;
   #datepickerTo = null;
   #datepickerFrom = null;
-  #currentformType = FormType.EDITING;
+  #currentformType = null;
 
   constructor({point = POINT_BLANCK, destinations, offers, onFormSubmit, onResetClick, onDeleteClick, formType}) {
     super();
     this._setState(EditingFormView.parseWaypointToState(point));
+    this._restoreHandlers();
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleResetClick = onResetClick;
     this.#handleDeleteClick = onDeleteClick;
-    this._restoreHandlers();
     this.#currentformType = formType;
   }
 
@@ -284,10 +324,6 @@ export default class EditingFormView extends AbstractStatefulView {
     this.#handleDeleteClick(EditingFormView.parseStateToWaypoint(this._state));
   };
 
-  static parseWaypointToState(point) {
-    return {...point};
-  }
-
   #setDatepicker() {
 
     const [dateFromElement, dateToElement] = this.element.querySelectorAll('.event__input--time');
@@ -319,7 +355,19 @@ export default class EditingFormView extends AbstractStatefulView {
   }
 
   static parseStateToWaypoint(state) {
-    return {...state};
+    const point = {...state};
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+    return point;
+  }
+
+  static parseWaypointToState(point) {
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
   }
 }
 
