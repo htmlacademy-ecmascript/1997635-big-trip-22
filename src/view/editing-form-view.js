@@ -216,13 +216,13 @@ export default class EditingFormView extends AbstractStatefulView {
   constructor({point = POINT_BLANK, destinations, offers, onFormSubmit, onResetClick, onDeleteClick, formType}) {
     super();
     this._setState(EditingFormView.parseWaypointToState(point));
-    this._restoreHandlers();
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleResetClick = onResetClick;
     this.#handleDeleteClick = onDeleteClick;
     this.#currentformType = formType;
+    this._restoreHandlers();
   }
 
   get template() {
