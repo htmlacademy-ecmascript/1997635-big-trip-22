@@ -159,6 +159,6 @@ export default class WaypointPresenter {
 
   #onDeleteClick = (point) => {
     this.#onDataChange(UserAction.DELETE_POINT,
-      UpdateType.MINOR, point, this.#destinations, this.#offers);
+      UpdateType.MINOR, point);
   };
 }

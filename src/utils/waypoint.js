@@ -35,6 +35,7 @@ const getDifferenceInTime = (start, end) => {
       break;
   }
   return pointDuration;
+
 };
 
 const sortWaypointsByDay = (a, b) => {
