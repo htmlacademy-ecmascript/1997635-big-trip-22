@@ -4,16 +4,16 @@ import {UserAction, UpdateType, FormType} from '../const.js';
 
 export default class NewPointPresenter {
   #container = null;
-  #handleDataChange = null;
-  #handleDestroy = null;
+  #onDataChange = null;
+  #onDestroy = null;
   #pointNewComponent = null;
   #pointsModel = null;
 
   constructor({container, pointsModel, onDataChange, onDestroy}) {
     this.#container = container;
     this.#pointsModel = pointsModel;
-    this.#handleDataChange = onDataChange;
-    this.#handleDestroy = onDestroy;
+    this.#onDataChange = onDataChange;
+    this.#onDestroy = onDestroy;
   }
 
   init() {
@@ -23,24 +23,24 @@ export default class NewPointPresenter {
     this.#pointNewComponent = new EditingFormView({
       destinations: this.#pointsModel.destinations,
       offers: this.#pointsModel.offers,
-      onResetClick: this.#handleResetClick,
-      onDeleteClick: this.#handleResetClick,
-      onFormSubmit: this.#handleFormSubmit,
+      onResetClick: this.#onResetClick,
+      onDeleteClick: this.#onResetClick,
+      onFormSubmit: this.#onFormSubmit,
       formType: FormType.CREATION,
     });
     render(this.#pointNewComponent, this.#container, RenderPosition.AFTERBEGIN);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#onEscKeyDown);
   }
 
   destroy() {
     if (this.#pointNewComponent === null) {
       return;
     }
-    this.#handleDestroy();
+    this.#onDestroy();
 
     remove(this.#pointNewComponent);
     this.#pointNewComponent = null;
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
   setSaving() {
@@ -61,19 +61,19 @@ export default class NewPointPresenter {
     this.#pointNewComponent.shake(resetFormState);
   }
 
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(
+  #onFormSubmit = (point) => {
+    this.#onDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
       point,
     );
   };
 
-  #handleResetClick = () => {
+  #onResetClick = () => {
     this.destroy();
   };
 
-  #escKeyDownHandler = (evt) => {
+  #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();

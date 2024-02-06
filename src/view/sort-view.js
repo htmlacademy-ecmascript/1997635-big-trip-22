@@ -33,13 +33,13 @@ function createSortTemplate(currentSortType = SortType.DAY) {
 }
 
 export default class SortView extends AbstractView {
-  #handleSortTypeChange = null;
+  #onSortTypeChange = null;
   #currentSortType = null;
 
   constructor({currentSortType, onSortTypeChange}) {
     super();
     this.#currentSortType = currentSortType;
-    this.#handleSortTypeChange = onSortTypeChange;
+    this.#onSortTypeChange = onSortTypeChange;
     this.element.addEventListener('change', this.#sortTypeChangeHandler);
   }
 
@@ -52,7 +52,7 @@ export default class SortView extends AbstractView {
       return;
     }
     evt.preventDefault();
-    this.#handleSortTypeChange(evt.target.dataset.sortType);
+    this.#onSortTypeChange(evt.target.dataset.sortType);
   };
 }
 

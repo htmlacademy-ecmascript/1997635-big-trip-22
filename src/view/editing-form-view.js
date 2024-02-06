@@ -66,7 +66,7 @@ function createDestinationTemplate({description, pictures}) {
       <p class="event__destination-description">
         ${description}
       </p>
-      ${pictures.length ? createPicturesTemplate(pictures) : ''}
+      ${pictures.length !== 0 ? createPicturesTemplate(pictures) : ''}
     </section>`
   );
 }
@@ -194,9 +194,9 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
         </header>
         <section class="event__details">
 
-          ${offersForType ? createOffersListTemplate(offersForType, pointOffers, isDisabled) : ''}
+          ${offersForType.length !== 0 ? createOffersListTemplate(offersForType, pointOffers, isDisabled) : ''}
 
-          ${currentDestination && (currentDestination.description.length || currentDestination.pictures.length) ? createDestinationTemplate(currentDestination) : ''}
+          ${currentDestination && (currentDestination.description.length !== 0 || currentDestination.pictures.length !== 0) ? createDestinationTemplate(currentDestination) : ''}
         </section>
       </form>
     </li>`
@@ -206,9 +206,9 @@ function createEditingFormTemplate(point, destinations, offers, formType) {
 export default class EditingFormView extends AbstractStatefulView {
   #destinations = [];
   #offers = [];
-  #handleFormSubmit = null;
-  #handleResetClick = null;
-  #handleDeleteClick = null;
+  #onFormSubmit = null;
+  #onResetClick = null;
+  #onDeleteClick = null;
   #datepickerTo = null;
   #datepickerFrom = null;
   #currentformType = null;
@@ -218,9 +218,9 @@ export default class EditingFormView extends AbstractStatefulView {
     this._setState(EditingFormView.parseWaypointToState(point));
     this.#destinations = destinations;
     this.#offers = offers;
-    this.#handleFormSubmit = onFormSubmit;
-    this.#handleResetClick = onResetClick;
-    this.#handleDeleteClick = onDeleteClick;
+    this.#onFormSubmit = onFormSubmit;
+    this.#onResetClick = onResetClick;
+    this.#onDeleteClick = onDeleteClick;
     this.#currentformType = formType;
     this._restoreHandlers();
   }
@@ -311,17 +311,17 @@ export default class EditingFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(EditingFormView.parseStateToWaypoint(this._state));
+    this.#onFormSubmit(EditingFormView.parseStateToWaypoint(this._state));
   };
 
   #resetBtnClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleResetClick();
+    this.#onResetClick();
   };
 
   #formDeleteHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick(EditingFormView.parseStateToWaypoint(this._state));
+    this.#onDeleteClick(EditingFormView.parseStateToWaypoint(this._state));
   };
 
   #setDatepicker() {
