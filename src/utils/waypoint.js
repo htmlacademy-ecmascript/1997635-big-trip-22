@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { Milliseconds } from '../const.js';
 
-const getRandomDateTo = (dateFrom) => new Date(dayjs(dateFrom).add((Math.random() * 10), 'hour').add((Math.random() * 10), 'minute'));
+dayjs.extend(duration);
 
 const getHours = (data) => dayjs(data).format('HH:mm');
 
@@ -15,15 +16,25 @@ const getDayMonth = (data) => dayjs(data).format('DD MMM');
 
 const getDifferenceInTime = (start, end) => {
   const difference = dayjs(end).diff(dayjs(start));
-  if (difference <= Milliseconds.MILLISECONDS_IN_HOURS) {
-    return dayjs(difference).format('mm[M]');
+  const differenceInDay = dayjs(end).diff(dayjs(start), 'day');
+
+  let pointDuration = 0;
+
+  switch (true) {
+    case difference >= Milliseconds.DAY * 10:
+      pointDuration = `${differenceInDay}D ${dayjs.duration(difference).format('HH[H] mm[M]')}`;
+      break;
+    case difference >= Milliseconds.DAY:
+      pointDuration = dayjs.duration(difference).format('DD[D] HH[H] mm[M]');
+      break;
+    case difference >= Milliseconds.HOURS:
+      pointDuration = dayjs.duration(difference).format('HH[H] mm[M]');
+      break;
+    case difference < Milliseconds.HOURS:
+      pointDuration = dayjs.duration(difference).format('mm[M]');
+      break;
   }
-  if (difference > Milliseconds.MILLISECONDS_IN_HOURS && difference < Milliseconds.MILLISECONDS_IN_DAY) {
-    return dayjs(difference).format('HH[H] mm[M]');
-  }
-  if (difference >= Milliseconds.MILLISECONDS_IN_DAY) {
-    return dayjs(difference).format('DD[D] HH[H] mm[M]');
-  }
+  return pointDuration;
 };
 
 const sortWaypointsByDay = (a, b) => {
@@ -64,4 +75,4 @@ function isBigDifference(pointA, pointB) {
   || getDifferenceInTime(pointA.dateFrom, pointA.dateTo) !== getDifferenceInTime(pointB.dateFrom, pointB.dateTo);
 }
 
-export {getRandomDateTo, getDataTime, getHours, getMonth, getDifferenceInTime, sortWaypointsByDay, sortWaypointsByTime, sortWaypointsByPrice, isBigDifference, getDay, getDayMonth};
+export {getDataTime, getHours, getMonth, getDifferenceInTime, sortWaypointsByDay, sortWaypointsByTime, sortWaypointsByPrice, isBigDifference, getDay, getDayMonth};

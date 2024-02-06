@@ -1,7 +1,7 @@
 const Milliseconds = {
-  MILLISECONDS_IN_DAY: 60000 * 60 * 24,
-  MILLISECONDS_IN_HOURS: 60000 * 60,
-  MILLISECONDS_IN_MINUTES: 60000
+  DAY: 1000 * 60 * 60 * 24,
+  HOURS: 1000 * 60 * 60,
+  MINUTES: 1000 * 60
 };
 
 const FilterType = {
