@@ -5,8 +5,8 @@ import { FormType, Mode, UserAction, UpdateType } from '../const.js';
 import { isBigDifference } from '../utils/waypoint.js';
 export default class WaypointPresenter {
   #waypointListContainer = null;
-  #handleDataChange = null;
-  #handleModeChange = null;
+  #onDataChange = null;
+  #onModeChange = null;
 
   #waypointComponent = null;
   #editingFormComponent = null;
@@ -18,8 +18,8 @@ export default class WaypointPresenter {
 
   constructor({waypointListContainer, onDataChange, onModeChange}) {
     this.#waypointListContainer = waypointListContainer;
-    this.#handleDataChange = onDataChange;
-    this.#handleModeChange = onModeChange;
+    this.#onDataChange = onDataChange;
+    this.#onModeChange = onModeChange;
   }
 
   init(point, destinations, offers) {
@@ -34,8 +34,8 @@ export default class WaypointPresenter {
       point: this.#point,
       destinations: this.#destinations,
       offers: this.#offers,
-      onEditClick: this.#handleEditClick,
-      onFavoriteClick: this.#handleFavoriteClick
+      onEditClick: this.#onEditClick,
+      onFavoriteClick: this.#onFavoriteClick
     });
 
     this.#editingFormComponent = new EditingFormView({
@@ -43,9 +43,9 @@ export default class WaypointPresenter {
       destinations: this.#destinations,
       offers: this.#offers,
       formType: FormType.EDITING,
-      onResetClick: this.#handleFormClose,
-      onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onResetClick: this.#onFormClose,
+      onFormSubmit: this.#onFormSubmit,
+      onDeleteClick: this.#onDeleteClick
     });
 
     if(prevWaypointComponent === null || prevEditingFormComponent === null) {
@@ -97,7 +97,7 @@ export default class WaypointPresenter {
 
   setAborting() {
     if (this.#mode === Mode.DEFAULT) {
-      this.#editingFormComponent.shake();
+      this.#waypointComponent.shake();
       return;
     }
     if(this.#mode === Mode.EDITING) {
@@ -112,7 +112,7 @@ export default class WaypointPresenter {
     }
   }
 
-  #escKeyDownHandler = (evt) => {
+  #onEscKeyDown = (evt) => {
     if(evt.key === 'Escape') {
       evt.preventDefault();
       this.#editingFormComponent.reset(this.#point);
@@ -122,34 +122,34 @@ export default class WaypointPresenter {
 
   #replaceWaypointToEditingForm() {
     replace(this.#editingFormComponent, this.#waypointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#handleModeChange();
+    document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#onModeChange();
     this.#mode = Mode.EDITING;
   }
 
   #replaceEditingFormToWaypoint() {
     replace(this.#waypointComponent, this.#editingFormComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.DEFAULT;
   }
 
-  #handleEditClick = () => {
+  #onEditClick = () => {
     this.#replaceWaypointToEditingForm();
   };
 
-  #handleFavoriteClick = () => {
-    this.#handleDataChange(UserAction.UPDATE_POINT,
+  #onFavoriteClick = () => {
+    this.#onDataChange(UserAction.UPDATE_POINT,
       UpdateType.PATCH, {...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
-  #handleFormClose = () => {
+  #onFormClose = () => {
     this.#editingFormComponent.reset(this.#point);
     this.#replaceEditingFormToWaypoint();
   };
 
-  #handleFormSubmit = (point) => {
+  #onFormSubmit = (point) => {
     const isMinorUpdate = isBigDifference(point, this.#point);
-    this.#handleDataChange(
+    this.#onDataChange(
       UserAction.UPDATE_POINT,
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       point,
@@ -157,8 +157,8 @@ export default class WaypointPresenter {
       this.#offers);
   };
 
-  #handleDeleteClick = (point) => {
-    this.#handleDataChange(UserAction.DELETE_POINT,
+  #onDeleteClick = (point) => {
+    this.#onDataChange(UserAction.DELETE_POINT,
       UpdateType.MINOR, point, this.#destinations, this.#offers);
   };
 }

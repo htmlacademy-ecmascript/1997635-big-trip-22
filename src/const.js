@@ -49,7 +49,7 @@ const POINT_BLANK = {
   destination: null,
   isFavorite: false,
   offers: [],
-  type: 'taxi',
+  type: 'flight',
 };
 
 const NoPointsTextType = {

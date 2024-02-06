@@ -49,12 +49,12 @@ export default class TripPresenter {
     this.#newPointPresenter = new NewPointPresenter({
       container: this.#waypointListComponent.element,
       pointsModel: this.#pointsModel,
-      onDataChange: this.#handleViewAction,
-      onDestroy: this.#newPointDestroyHandler,
+      onDataChange: this.#onViewAction,
+      onDestroy: this.#onNewPointDestroy,
     });
 
-    this.#pointsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#onModelEvent);
+    this.#filterModel.addObserver(this.#onModelEvent);
   }
 
   get points() {
@@ -84,7 +84,7 @@ export default class TripPresenter {
   init() {
     render(this.#waypointListComponent, this.#tripContainer);
     this.#newPointButtonComponent = new NewPointButtonView({
-      onButtonClick: this.#buttonClickHandler,
+      onButtonClick: this.#onButtonClick,
     });
     render(this.#newPointButtonComponent, this.#newPointButtonContainer);
     this.#renderTrip();
@@ -96,7 +96,7 @@ export default class TripPresenter {
     this.#newPointPresenter.init();
   }
 
-  #buttonClickHandler = () => {
+  #onButtonClick = () => {
     this.#isCreating = true;
     if (this.#noWaypointComponent) {
       remove(this.#noWaypointComponent);
@@ -117,14 +117,14 @@ export default class TripPresenter {
   #renderWaypoint(point, destinations, offers) {
     const waypointPresenter = new WaypointPresenter({
       waypointListContainer: this.#waypointListComponent,
-      onDataChange: this.#handleViewAction,
-      onModeChange: this.#handleModeChange
+      onDataChange: this.#onViewAction,
+      onModeChange: this.#onModeChange
     });
     waypointPresenter.init(point, destinations, offers);
     this.#waypointPresenters.set(point.id, waypointPresenter);
   }
 
-  #handleModeChange = () => {
+  #onModeChange = () => {
     this.#newPointPresenter.destroy();
     this.#waypointPresenters.forEach((presenter) => presenter.resetView());
   };
@@ -145,7 +145,7 @@ export default class TripPresenter {
     }
   };
 
-  #handleViewAction = async (actionType, updateType, update) => {
+  #onViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
@@ -177,7 +177,7 @@ export default class TripPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handleModelEvent = (updateType, data) => {
+  #onModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#waypointPresenters.get(data.id).init(data, this.#pointsModel.destinations, this.#pointsModel.offers);
@@ -199,7 +199,7 @@ export default class TripPresenter {
   };
 
 
-  #handleSortTypeChange = (sortType) => {
+  #onSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
@@ -238,7 +238,7 @@ export default class TripPresenter {
     this.#waypointPresenters.clear();
   }
 
-  #newPointDestroyHandler = () => {
+  #onNewPointDestroy = () => {
     this.#isCreating = false;
     this.#newPointButtonComponent.setDisabled(false);
     if(this.points.length === 0) {
@@ -253,7 +253,7 @@ export default class TripPresenter {
 
   #renderSort() {
     this.#sortComponent = new SortView({
-      onSortTypeChange: this.#handleSortTypeChange,
+      onSortTypeChange: this.#onSortTypeChange,
       currentSortType: this.#currentSortType,
     });
     render(this.#sortComponent, this.#tripContainer);
