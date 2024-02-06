@@ -4,15 +4,15 @@ import TripView from '../view/trip-view.js';
 import NoWaypointView from '../view/no-waypoint-view.js';
 import LoadingView from '../view/loading-view.js';
 import TripInfoView from '../view/trip-info-view.js';
+import FailedLoadingView from '../view/failed-loading-view.js';
+import NewPointButtonView from '../view/new-point-btn-view.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
-import NewPointButtonView from '../view/new-point-btn-view.js';
 import { SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
 import { sortWaypointsByDay, sortWaypointsByPrice, sortWaypointsByTime } from '../utils/waypoint.js';
 import { filter } from '../utils/filter.js';
-
 export default class TripPresenter {
   #tripContainer = null;
   #pointsModel = null;
@@ -27,6 +27,7 @@ export default class TripPresenter {
   #waypointListComponent = new WaypointListView();
   #loadingComponent = new LoadingView();
   #tripComponent = new TripView();
+  #failedLoadingComponent = new FailedLoadingView();
   #waypointPresenters = new Map();
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
@@ -38,7 +39,7 @@ export default class TripPresenter {
 
   #isLoading = true;
   #isCreating = false;
-
+  #isFailed = false;
 
   constructor ({tripContainer, pointsModel, newPointButtonContainer, filterModel}) {
     this.#tripContainer = tripContainer;
@@ -195,6 +196,13 @@ export default class TripPresenter {
         remove(this.#loadingComponent);
         this.#renderTrip();
         break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#newPointButtonComponent.setDisabled(true);
+        this.#renderFailedLoading();
+        this.#isFailed = true;
+        break;
     }
   };
 
@@ -227,6 +235,10 @@ export default class TripPresenter {
     this.#renderSort();
     render(this.#waypointListComponent, this.#tripContainer);
     this.#renderWaypointList(this.points);
+  }
+
+  #renderFailedLoading() {
+    render(this.#failedLoadingComponent, this.#waypointListComponent.element);
   }
 
   #renderLoading() {
