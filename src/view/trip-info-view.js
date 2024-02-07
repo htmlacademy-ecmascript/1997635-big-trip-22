@@ -78,7 +78,7 @@ export default class TripInfoView extends AbstractView{
     }
 
     if (this.#points.length === 1) {
-      return getDayMonth(this.#points.at(0).dateFrom);
+      return `${getDayMonth(this.#points.at(0).dateFrom)}&nbsp;&mdash;&nbsp;${getDayMonth(this.#points.at(0).dateTo)}`;
     }
 
     return `${getDayMonth(this.#points.at(0).dateFrom)}&nbsp;&mdash;&nbsp;${getDayMonth(this.#points.at(-1).dateTo)}`;
