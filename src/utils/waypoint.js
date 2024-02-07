@@ -6,7 +6,7 @@ dayjs.extend(duration);
 
 const getHours = (data) => dayjs(data).format('HH:mm');
 
-const getMonth = (data) => dayjs(data).format('MMM YY');
+const getMonth = (data) => dayjs(data).format('MMM DD');
 
 const getDataTime = (data) => dayjs(data).format('DD/MM/YY HH:mm');
 
