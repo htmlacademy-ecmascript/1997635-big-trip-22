@@ -5,7 +5,7 @@ import NoWaypointView from '../view/no-waypoint-view.js';
 import LoadingView from '../view/loading-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import FailedLoadingView from '../view/failed-loading-view.js';
-import NewPointButtonView from '../view/new-point-btn-view.js';
+import NewPointButtonView from '../view/new-point-button-view.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import WaypointPresenter from './waypoint-presenter.js';

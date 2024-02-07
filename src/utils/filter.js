@@ -8,4 +8,11 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => dayjs().isAfter(point.dateTo, 'day'))
 };
 
-export { filter };
+function generateFilter(points) {
+  return Object.entries(filter).map(([filterType, filterPoints]) => ({
+    type: filterType,
+    count: filterPoints(points).length
+  }));
+}
+
+export {generateFilter, filter};

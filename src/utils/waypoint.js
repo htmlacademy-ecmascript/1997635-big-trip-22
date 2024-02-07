@@ -38,19 +38,19 @@ const getDifferenceInTime = (start, end) => {
 
 };
 
-const sortWaypointsByDay = (a, b) => {
-  if(dayjs(a.dateFrom) > dayjs(b.dateFrom)) {
+const sortWaypointsByDay = (pointA, pointB) => {
+  if(dayjs(pointA.dateFrom) > dayjs(pointB.dateFrom)) {
     return 1;
   }
-  if(dayjs(a.dateFrom) < dayjs(b.dateFrom)) {
+  if(dayjs(pointA.dateFrom) < dayjs(pointB.dateFrom)) {
     return -1;
   }
   return 0;
 };
 
-const sortWaypointsByTime = (b, a) => {
-  const aTime = dayjs(a.dateTo).diff(a.dateFrom);
-  const bTime = dayjs(b.dateTo).diff(b.dateFrom);
+const sortWaypointsByTime = (pointB, pointA) => {
+  const aTime = dayjs(pointA.dateTo).diff(pointA.dateFrom);
+  const bTime = dayjs(pointB.dateTo).diff(pointB.dateFrom);
   if(aTime > bTime) {
     return 1;
   }
@@ -60,11 +60,11 @@ const sortWaypointsByTime = (b, a) => {
   return 0;
 };
 
-const sortWaypointsByPrice = (b, a) => {
-  if(a.basePrice > b.basePrice) {
+const sortWaypointsByPrice = (pointB, pointA) => {
+  if(pointA.basePrice > pointB.basePrice) {
     return 1;
   }
-  if(a.basePrice < b.basePrice) {
+  if(pointA.basePrice < pointB.basePrice) {
     return -1;
   }
   return 0;
