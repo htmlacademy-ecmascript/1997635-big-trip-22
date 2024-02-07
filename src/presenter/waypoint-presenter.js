@@ -90,7 +90,7 @@ export default class WaypointPresenter {
     if(this.#mode === Mode.EDITING) {
       this.#editingFormComponent.updateElement({
         isDisabled: true,
-        isSaving: true,
+        isDeleting: true,
       });
     }
   }
