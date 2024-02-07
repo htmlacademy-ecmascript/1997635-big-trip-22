@@ -233,7 +233,7 @@ export default class EditingFormView extends AbstractStatefulView {
     if(this.#currentformType === FormType.EDITING) {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetBtnClickHandler);
     }
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formClickHandler);
     this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
@@ -316,7 +316,7 @@ export default class EditingFormView extends AbstractStatefulView {
     this.#handleResetClick();
   };
 
-  #formDeleteHandler = (evt) => {
+  #formClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleDeleteClick(EditingFormView.parseStateToWaypoint(this._state));
   };
